@@ -107,6 +107,6 @@ body {
 }
 
 .order-summary-content.open {
-    max-height: 180px;
+    max-height: 150px;
     opacity: 1;
 }
