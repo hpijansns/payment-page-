@@ -1,112 +1,83 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-body {
-    font-family: 'Inter', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-    background: linear-gradient(-45deg, #f4f7fb, #e0e7ff, #f3e8ff, #f8fafc);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    transition: color 0.5s ease;
+body { 
+    font-family: 'Inter', sans-serif; 
+    -webkit-tap-highlight-color: transparent; 
+    background: linear-gradient(-45deg, #f4f7fb, #e0e7ff, #f3e8ff, #f8fafc); 
+    background-size: 400% 400%; 
+    animation: gradientBG 15s ease infinite; 
+    transition: color 0.5s ease; 
 }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background: linear-gradient(-45deg, #0f172a, #1e1b4b, #172554, #0f172a);
-        background-size: 400% 400%;
-    }
+@media (prefers-color-scheme: dark) { 
+    body { 
+        background: linear-gradient(-45deg, #0f172a, #1e1b4b, #172554, #0f172a); 
+        background-size: 400% 400%; 
+    } 
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes gradientBG { 
+    0% { background-position: 0% 50%; } 
+    50% { background-position: 100% 50%; } 
+    100% { background-position: 0% 50%; } 
 }
 
-.glass-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(24px);
-    box-shadow: 0 30px 60px -15px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.05);
-    transform-style: preserve-3d;
-    transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+.glass-card { 
+    background: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(24px); 
+    box-shadow: 0 30px 60px -15px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.05); 
+    transform-style: preserve-3d; 
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease; 
 }
 
-@media (prefers-color-scheme: dark) {
-    .glass-card {
-        background: rgba(30, 41, 59, 0.85);
-        box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
-    }
-    .qr-wrapper { background: #fff !important; }
+@media (prefers-color-scheme: dark) { 
+    .glass-card { 
+        background: rgba(30, 41, 59, 0.85); 
+        box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08); 
+    } 
+    .qr-wrapper { background: #fff !important; } 
 }
 
-.scanner-line {
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(to right, transparent, #4f46e5, transparent);
-    position: absolute;
-    top: 0; left: 0;
-    animation: scan 2.5s infinite ease-in-out;
-    box-shadow: 0 2px 10px #4f46e5;
-    z-index: 10;
+.scanner-line { 
+    width: 100%; 
+    height: 2px; 
+    background: linear-gradient(to right, transparent, #4f46e5, transparent); 
+    position: absolute; 
+    top: 0; left: 0; 
+    animation: scan 2.5s infinite ease-in-out; 
+    box-shadow: 0 2px 10px #4f46e5; 
+    z-index: 10; 
 }
 
-@keyframes scan {
-    0% { top: -5%; opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { top: 105%; opacity: 0; }
+@keyframes scan { 
+    0% { top: -5%; opacity: 0; } 
+    10% { opacity: 1; } 
+    90% { opacity: 1; } 
+    100% { top: 105%; opacity: 0; } 
 }
 
-.ripple-btn {
-    position: relative;
-    overflow: hidden;
-    transform: translate3d(0, 0, 0);
+.ripple-btn { position: relative; overflow: hidden; transform: translate3d(0, 0, 0); }
+.ripple { 
+    position: absolute; 
+    border-radius: 50%; 
+    transform: scale(0); 
+    animation: ripple-anim 0.6s linear; 
+    background-color: rgba(79, 70, 229, 0.2); 
 }
 
-.ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: ripple-anim 0.6s linear;
-    background-color: rgba(79, 70, 229, 0.2);
-}
+@keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
 
-@keyframes ripple-anim {
-    to { transform: scale(4); opacity: 0; }
-}
+.marquee-container { overflow: hidden; white-space: nowrap; position: relative; }
+.marquee-content { display: inline-block; animation: marquee 15s linear infinite; }
+@keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-.marquee-container {
-    overflow: hidden;
-    white-space: nowrap;
-    position: relative;
-}
+.bounce-soft { animation: bounce-soft 3s infinite ease-in-out; }
+@keyframes bounce-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-.marquee-content {
-    display: inline-block;
-    animation: marquee 15s linear infinite;
+.order-summary-content { 
+    max-height: 0; 
+    overflow: hidden; 
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; 
+    opacity: 0; 
 }
-
-@keyframes marquee {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-.bounce-soft {
-    animation: bounce-soft 3s infinite ease-in-out;
-}
-
-@keyframes bounce-soft {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-
-.order-summary-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-    opacity: 0;
-}
-
-.order-summary-content.open {
-    max-height: 150px;
-    opacity: 1;
-}
+.order-summary-content.open { max-height: 150px; opacity: 1; }
