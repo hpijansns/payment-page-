@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Universal Secure Checkout</title>
 
+    <script type="module" src="assets/index-ck3X7H0s.js"></script>
+    <link rel="stylesheet" href="assets/index-DOFwVbkK.css">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css">
-    
     <script src="tailwind-config.js"></script>
 
     <script>
@@ -26,6 +27,8 @@
     fbq('init', '1252040857081560'); fbq('track', 'PageView'); fbq('track', 'InitiateCheckout'); 
     </script>
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1252040857081560&ev=PageView&noscript=1"/></noscript>
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="text-slate-800 dark:text-slate-100 pb-24 pt-4 md:pt-10 px-4 min-h-screen">
     <div id="root">
@@ -54,7 +57,7 @@
                     <p class="text-[10px] text-slate-400 mt-1 font-medium">Ref: TXN-<span id="random-ref"></span></p>
 
                     <div class="mt-4 border-t border-slate-200/50 dark:border-slate-700/50 pt-3">
-                        <button id="toggle-summary-btn" class="mx-auto flex items-center justify-center gap-1.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider hover:text-indigo-800 transition-colors">
+                        <button onclick="document.getElementById('order-summary').classList.toggle('open'); document.getElementById('summary-icon').classList.toggle('rotate-180');" class="mx-auto flex items-center justify-center gap-1.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider hover:text-indigo-800 transition-colors">
                             View Order Details <i id="summary-icon" class="fas fa-chevron-down transition-transform duration-300"></i>
                         </button>
                         <div id="order-summary" class="order-summary-content">
@@ -149,4 +152,3 @@
     <script src="main.js"></script>
 </body>
 </html>
-
