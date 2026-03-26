@@ -2,7 +2,6 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="/vite.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Universal Secure Checkout</title>
 
@@ -10,9 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-
-    <link rel="stylesheet" href="style.css">
-    <script src="logic.js" defer></script>
 
     <script>
         tailwind.config = {
@@ -28,6 +24,29 @@
             }
         }
     </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background: linear-gradient(-45deg, #f4f7fb, #e0e7ff, #f3e8ff, #f8fafc); background-size: 400% 400%; animation: gradientBG 15s ease infinite; transition: color 0.5s ease; }
+        @media (prefers-color-scheme: dark) { body { background: linear-gradient(-45deg, #0f172a, #1e1b4b, #172554, #0f172a); background-size: 400% 400%; } }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(24px); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.05); transform-style: preserve-3d; transition: transform 0.1s ease-out, box-shadow 0.3s ease; }
+        @media (prefers-color-scheme: dark) { .glass-card { background: rgba(30, 41, 59, 0.85); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08); } .qr-wrapper { background: #fff !important; } }
+
+        .scanner-line { width: 100%; height: 2px; background: linear-gradient(to right, transparent, #4f46e5, transparent); position: absolute; top: 0; left: 0; animation: scan 2.5s infinite ease-in-out; box-shadow: 0 2px 10px #4f46e5; z-index: 10; }
+        @keyframes scan { 0% { top: -5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 105%; opacity: 0; } }
+
+        .ripple-btn { position: relative; overflow: hidden; transform: translate3d(0, 0, 0); }
+        .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-anim 0.6s linear; background-color: rgba(79, 70, 229, 0.2); }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+        .marquee-container { overflow: hidden; white-space: nowrap; position: relative; }
+        .marquee-content { display: inline-block; animation: marquee 15s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        
+        .order-summary-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; opacity: 0; }
+        .order-summary-content.open { max-height: 150px; opacity: 1; }
+    </style>
 </head>
 <body class="text-slate-800 dark:text-slate-100 pb-24 pt-4 md:pt-10 px-4 min-h-screen">
     <div id="root">
@@ -35,13 +54,13 @@
             
             <div class="flex justify-between items-center mb-6 px-2">
                 <div class="flex items-center gap-3">
-                    <div id="brand-logo-container" class="w-11 h-11 rounded-full p-0.5 shadow-md shadow-indigo-100 dark:shadow-none transition-transform duration-300 group hover:scale-105 relative overflow-hidden flex items-center justify-center">
-                        <img id="brand-logo-img" src="" alt="Logo" class="w-full h-full object-cover rounded-full transition-opacity duration-300 hidden">
+                    <div id="brand-logo-container" class="w-11 h-11 rounded-full p-0.5 shadow-md transition-transform duration-300 relative overflow-hidden flex items-center justify-center">
+                        <img id="brand-logo-img" src="" alt="Logo" class="w-full h-full object-cover rounded-full hidden">
                         <i id="brand-logo-fallback" class="fas fa-shield-alt text-white text-base absolute z-10 hidden"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5">
-                            <h1 id="brand-title" class="font-extrabold text-xl leading-tight text-slate-900 dark:text-white tracking-tight">Loading...</h1>
+                            <h1 id="brand-title" class="font-extrabold text-xl leading-tight text-slate-900 dark:text-white tracking-tight">Pintu</h1>
                             <span class="relative inline-flex items-center justify-center text-blue-500 text-sm" title="Verified Business"><i class="fas fa-certificate"></i><i class="fas fa-check absolute text-white text-[8px] mt-[1px]"></i></span>
                         </div>
                         <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Universal Checkout</p>
@@ -58,7 +77,7 @@
                     <p class="text-[10px] text-slate-400 mt-1 font-medium">Ref: TXN-<span id="random-ref"></span></p>
 
                     <div class="mt-4 border-t border-slate-200/50 dark:border-slate-700/50 pt-3">
-                        <button id="toggle-summary" class="mx-auto flex items-center justify-center gap-1.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider hover:text-indigo-800 transition-colors">
+                        <button onclick="document.getElementById('order-summary').classList.toggle('open'); document.getElementById('summary-icon').classList.toggle('rotate-180');" class="mx-auto flex items-center justify-center gap-1.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider transition-colors">
                             View Order Details <i id="summary-icon" class="fas fa-chevron-down transition-transform duration-300"></i>
                         </button>
                         <div id="order-summary" class="order-summary-content">
@@ -97,9 +116,11 @@
                             <div class="mt-5 max-w-[280px] mx-auto">
                                 <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Paying to UPI ID</p>
                                 <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-xl py-2 px-3 group transition-colors">
-                                    <span id="upi-text" class="text-sm font-semibold text-slate-700 dark:text-slate-300 truncate mr-2">...</span>
+                                    <span id="upi-text" class="text-sm font-semibold text-slate-700 dark:text-slate-300 truncate mr-2">Loading...</span>
                                     <input type="hidden" id="upiID" value="">
-                                    <button type="button" id="copy-btn" class="ripple-btn bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-indigo-600 dark:text-indigo-400 transition-all text-xs font-bold py-1.5 px-3 rounded-lg shadow-sm">COPY</button>
+                                    <button type="button" onclick="window.copyUpi(event)" class="ripple-btn bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-indigo-600 dark:text-indigo-400 transition-all text-xs font-bold py-1.5 px-3 rounded-lg shadow-sm">
+                                        COPY
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -111,11 +132,11 @@
                         </div>
 
                         <div class="flex justify-center gap-3">
-                            <a id="phonepe-link" href="#" class="upi-app-link ripple-btn flex-1 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-2 flex flex-col items-center justify-center hover:-translate-y-1 transition-all shadow-sm hover:shadow-md">
+                            <a id="phonepe-link" href="#" class="upi-app-link ripple-btn flex-1 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-2 flex flex-col items-center justify-center transition-all shadow-sm">
                                 <img alt="PhonePe" class="w-7 h-7 object-contain mb-1.5" src="https://cdn.razorpay.com/app/phonepe.svg">
                                 <span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">PhonePe</span>
                             </a>
-                            <a id="paytm-link" href="#" class="upi-app-link ripple-btn flex-1 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-2 flex flex-col items-center justify-center hover:-translate-y-1 transition-all shadow-sm hover:shadow-md">
+                            <a id="paytm-link" href="#" class="upi-app-link ripple-btn flex-1 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 px-2 flex flex-col items-center justify-center transition-all shadow-sm">
                                 <img alt="Paytm" class="w-7 h-7 object-contain mb-1.5" src="https://cdn.razorpay.com/app/paytm.svg">
                                 <span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">Paytm</span>
                             </a>
@@ -150,9 +171,96 @@
         </div>
     </div> 
 
-    <a href="#" class="fixed bottom-4 right-4 z-50 bounce-soft bg-white dark:bg-slate-800 p-1 pl-2.5 pr-1 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-2 hover:scale-105 transition-transform">
-        <span class="text-[9px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide">Help?</span>
-        <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-inner"><i class="fab fa-whatsapp text-white text-base"></i></div>
-    </a>
-</body>
-</html>
+    <script>
+        // Copy UPI Function
+        window.copyUpi = function(event) {
+            const copyText = document.getElementById("upiID");
+            const btn = event.currentTarget; 
+            if(copyText && copyText.value) {
+                navigator.clipboard.writeText(copyText.value).then(() => {
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    const originalHTML = btn.innerHTML; btn.innerHTML = '<i class="fas fa-check"></i>';
+                    btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500', 'scale-110'); 
+                    btn.classList.remove('bg-white', 'text-indigo-600', 'dark:bg-slate-800', 'dark:text-indigo-400');
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML; 
+                        btn.classList.remove('bg-emerald-500', 'text-white', 'border-emerald-500', 'scale-110'); 
+                        btn.classList.add('bg-white', 'text-indigo-600', 'dark:bg-slate-800', 'dark:text-indigo-400');
+                    }, 2000);
+                }).catch(err => console.error('Failed to copy', err));
+            }
+        };
+
+        // Price Animation
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = '₹' + (progress * (end - start) + start).toFixed(2);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // Timer
+            let timeLeft = 10 * 60; const timerEl = document.getElementById('countdown'); const timerContainer = document.getElementById('timer-container');
+            if(timerEl) {
+                const countdownInterval = setInterval(() => {
+                    if(timeLeft <= 0) { clearInterval(countdownInterval); timerEl.innerText = "0:00"; return; }
+                    timeLeft--;
+                    if(timeLeft <= 60 && !timerContainer.classList.contains('bg-red-100')) {
+                        timerContainer.classList.replace('bg-rose-50', 'bg-red-100'); timerContainer.classList.replace('text-rose-600', 'text-red-700'); timerContainer.classList.replace('border-rose-100', 'border-red-300'); timerContainer.classList.add('animate-pulse', 'scale-105');
+                    }
+                    let m = Math.floor(timeLeft / 60); let s = timeLeft % 60; timerEl.innerText = `${m}:${s < 10 ? '0'+s : s}`;
+                }, 1000);
+            }
+
+            // CORE LOGIC (URL Params, Logo, QR)
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const finalPrice = parseFloat(urlParams.get('amount')) || 1.00;
+                
+                const dynamicBrand = urlParams.get('brand') || 'Pintu';
+                const defaultLogo = "https://iili.io/qUqmEOX.jpg";
+                const customLogo = urlParams.get('logoUrl');
+                
+                const brandLogoImg = document.getElementById('brand-logo-img');
+                const brandLogoFallback = document.getElementById('brand-logo-fallback');
+                const brandLogoContainer = document.getElementById('brand-logo-container');
+                const summaryBrandLogo = document.getElementById('summary-brand-logo');
+
+                // Logo Logic
+                if (dynamicBrand !== 'Pintu' && !customLogo) {
+                    brandLogoImg.classList.add('hidden');
+                    summaryBrandLogo.classList.add('hidden');
+                    brandLogoFallback.classList.remove('hidden');
+                    brandLogoContainer.classList.add('bg-gradient-to-tr', 'from-indigo-600', 'to-violet-500');
+                } else {
+                    const activeLogo = customLogo ? customLogo : defaultLogo;
+                    brandLogoImg.src = activeLogo;
+                    summaryBrandLogo.src = activeLogo;
+                    brandLogoImg.classList.remove('hidden');
+                    summaryBrandLogo.classList.remove('hidden');
+                    brandLogoFallback.classList.add('hidden');
+                    brandLogoContainer.classList.remove('bg-gradient-to-tr', 'from-indigo-600', 'to-violet-500');
+                }
+                
+                const testUpiId = urlParams.get('upi') || "paytm.s1h6t6g@pty";
+                const transactionNote = urlParams.get('note') || `Order for ${dynamicBrand}`;
+                const orderId = urlParams.get('orderId') || Math.floor(100000000 + Math.random() * 900000000);
+                
+                // Set Text Content
+                document.getElementById('brand-title').innerText = dynamicBrand;
+                document.getElementById('summary-brand').innerText = dynamicBrand;
+                document.getElementById('random-ref').innerText = orderId;
+                document.getElementById('summary-txn').innerText = "TXN-" + orderId;
+                
+                const priceDisplays = document.querySelectorAll('.final_paid_price');
+                priceDisplays.forEach(el => { if(el) animateValue(el, 0, finalPrice, 1000); });
+
+                const upiTextEl = document.getElementById('upi-text'); 
+                const upiInputEl = document.getElementById('upiID');
+                if(upiText
