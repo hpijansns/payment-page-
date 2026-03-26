@@ -8,14 +8,17 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- External Tailwind Config -->
+    <script src="tailwind-config.js"></script>
+    
     <script type="module" src="assets/index-ck3X7H0s.js"></script>
     <link rel="stylesheet" href="assets/index-DOFwVbkK.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-
-    <script src="tailwind-config.js"></script>
+    <!-- External Custom Styles -->
     <link rel="stylesheet" href="styles.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
     <script>
     !function(f,b,e,v,n,t,s)
@@ -81,6 +84,7 @@
                         <div class="text-center mt-4">
                             <div class="relative inline-block p-1 bg-white qr-wrapper rounded-2xl shadow-md border border-slate-200 animate-qr-reveal">
                                 <div class="relative rounded-xl overflow-hidden w-40 h-40 flex items-center justify-center bg-slate-50">
+                                    <!-- Using img src as required for QRious DataURL injection later in JS -->
                                     <img id="qr-code-img" alt="Scan to Pay" class="w-full h-full object-contain absolute top-0 left-0 z-10 bg-white transition-opacity duration-300" src="" style="opacity:0;" onload="this.style.opacity='1'">
                                     <div class="scanner-line"></div>
                                 </div>
@@ -149,6 +153,7 @@
         <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-inner"><i class="fab fa-whatsapp text-white text-base"></i></div>
     </a>
 
+    <!-- External Main JS -->
     <script src="main.js"></script>
 </body>
 </html>
